@@ -6,3 +6,4 @@ rollup.config.js
 index.html
 dist/
 src/
+.github/
