@@ -1,5 +1,4 @@
 import React from 'react'
-import './index.scss'
 
 export * from './editor/editor'
 export * from './editor/nodes/node'

@@ -4,5 +4,5 @@ tsconfig.json
 vite.config.js
 rollup.config.js
 index.html
+dist/
 src/
-dist/status.html

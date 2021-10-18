@@ -47,7 +47,6 @@ import {
   SFMarkdownView
 } from './nodes/markdown'
 import { getLocalStorage, setLocalStorage } from './helpers'
-import './editor.scss'
 
 const StorageKey = 'editor-value'
 // 这里是单例的，一个页面只能有一个Editor
