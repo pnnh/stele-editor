@@ -11,7 +11,7 @@
     "esModuleInterop": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": ".",
     "baseUrl": ".",
     //"isolatedModules": true,
@@ -22,5 +22,5 @@
     "plugins": []
   },
   "include": ["src/**/*"],
-  "exclude": ["dist"]
+  "exclude": ["dist", "node_modules"]
 }

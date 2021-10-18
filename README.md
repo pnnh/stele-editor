@@ -10,3 +10,9 @@ npm run build
 ```shell
 npm run dev
 ```
+
+
+发布到npmjs
+```shell
+npm publish --access public
+```

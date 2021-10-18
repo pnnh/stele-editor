@@ -1,0 +1,8 @@
+.idea/
+.eslintrc.js
+tsconfig.json
+vite.config.js
+rollup.config.js
+index.html
+src/
+dist/status.html

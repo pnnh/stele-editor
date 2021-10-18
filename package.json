@@ -1,11 +1,19 @@
 {
   "name": "@pnnh/stele",
-  "version": "0.0.1",
+  "version": "0.0.3",
+  "description": "Loads themed styles.",
+  "keywords": [
+    "editor"
+  ],
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/pnnh/stele-editor"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "rollup --config --watch"
+    "build": "rollup --config"
   },
   "resolutions": {},
   "dependencies": {
@@ -39,6 +47,7 @@
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.26.0",
     "rollup": "^2.51.2",
+    "rollup-plugin-dts": "^4.0.0",
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-visualizer": "^5.5.0",
     "sass": "^1.43.2",
