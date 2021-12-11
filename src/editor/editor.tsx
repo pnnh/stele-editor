@@ -1,4 +1,4 @@
-import React, { ClipboardEvent, useCallback, useMemo } from 'react'
+import React, { ClipboardEvent, useCallback, useMemo, useState } from 'react'
 import { Editable, withReact, Slate, ReactEditor } from 'slate-react'
 import {
   Transforms,
@@ -109,16 +109,16 @@ function SFXEditor (props: { value: SFEditorModel, onChange: (value: SFEditorMod
                                         <i className="ri-close-line"></i>
                                       </button>
                                     </Stack.Item>
-                                    <Stack.Item>
-                                      <button title='页面源码' className={'icon-button'} disabled={sourceMode}
-                                              onMouseDown={() => {
-                                                console.debug('showSource', props.value)
-                                                toggleSourceMode()
-                                                showSource(props.value, sourceMode)
-                                              }}>
-                                        <i className="ri-file-code-line"></i>
-                                      </button>
-                                    </Stack.Item>
+                                    {/* <Stack.Item> */}
+                                    {/*  <button title='页面源码' className={'icon-button'} disabled={sourceMode} */}
+                                    {/*          onMouseDown={() => { */}
+                                    {/*            console.debug('showSource', props.value) */}
+                                    {/*            toggleSourceMode() */}
+                                    {/*            showSource(props.value, sourceMode) */}
+                                    {/*          }}> */}
+                                    {/*    <i className="ri-file-code-line"></i> */}
+                                    {/*  </button> */}
+                                    {/* </Stack.Item> */}
                                 </Stack>
                             </Stack.Item>
                         </Stack>
@@ -350,6 +350,7 @@ function decorateElement ([node, path]: NodeEntry): SlateRange[] {
 
 function Element ({ attributes, children, element }:{attributes: any, children: any, element: any}) {
   console.debug('renderElement', element, attributes, children)
+  const [isActive, setIsActive] = useState<boolean>(false)
   let view: JSX.Element
   if (element.name === HeaderName) {
     view = <SFHeaderView attributes={attributes} node={element as SFHeaderNode}>
@@ -362,7 +363,18 @@ function Element ({ attributes, children, element }:{attributes: any, children: 
   } else {
     view = <SFParagraphView attributes={attributes} node={element as SFParagraphNode}>{children}</SFParagraphView>
   }
-  return view
+  const elementClass = 'element ' + (isActive ? 'element-active' : '')
+  const actionsClass = 'actions ' + (isActive ? '' : 'invisible')
+  return <div className={elementClass}
+    onMouseEnter={() => setIsActive(true)}
+    onMouseLeave={() => setIsActive(false)}>
+    <div className={actionsClass} contentEditable={false}>
+      <button title='添加' className={'actions-button'}>
+        <i className="ri-add-fill"></i>
+      </button>
+    </div>
+    <div>{view}</div>
+  </div>
 }
 
 function Leaf ({ attributes, children, leaf }:{attributes: any, children: any, leaf: any}) {

@@ -2,6 +2,30 @@
   border: 1px solid #edebe9;margin-bottom: 16px;
   min-height: 400px;max-height:600px;
 
+  .element {
+    .actions {
+      .actions-button {
+        border: none; background: none;color:#0078d4;
+        cursor: pointer;
+        i {
+          font-size: 16px;
+          vertical-align: middle;
+        }
+      }
+      .actions-button.active,.actions-button:hover {
+        background: #edebe966;
+      }
+    }
+    .actions.invisible {
+      visibility: hidden;
+    }
+  }
+  .element-active {
+    background-color: #E0F1FF;
+    .actions {
+      background-color: #c7dbf8;
+    }
+  }
   .toolbar {
     padding: 8px 16px 8px 16px;border-bottom: solid 1px #edebe9;
   }
@@ -32,8 +56,20 @@
       float: right;position: relative;top: 4px;
     }
   }
+  .header {
+    h1,h2,h3,h4,h5,h6 {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 4px 8px;
+    }
+  }
   .paragraph {
     position: relative;
+    p {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 4px 8px;
+    }
     .show {
       position: absolute;
       top: -32px;

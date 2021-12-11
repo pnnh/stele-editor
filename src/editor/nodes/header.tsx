@@ -91,7 +91,7 @@ export function SFHeaderView (props: {attributes: any, children: any, node: SFHe
       throw new Error(`未知标题: ${props.node.header}`)
   }
 
-  return <div onMouseEnter={setTrue}
+  return <div className={'header'} onMouseEnter={setTrue}
                 onMouseLeave={setFalse}>
         {isCalloutVisible && (
         <Stack horizontal horizontalAlign="start" tokens={{ childrenGap: 8 }}
