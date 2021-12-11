@@ -10,16 +10,15 @@ import {
   Transforms
 } from 'slate'
 import { NewTextNode, TextName } from './text'
-import { useBoolean } from '@fluentui/react-hooks'
 import isHotkey from 'is-hotkey'
 
 export const ParagraphName = 'paragraph'
 
-export function SFParagraphToolbar (props: { disabled: boolean }) {
+export function SFParagraphToolbar (props: { disabled: boolean, node: SFParagraphNode }) {
   const editor = useSlate() as ReactEditor
   const paragraph = NewParagraphNode('')
   const className = 'icon-button size-normal' + (isBlockActive(editor, isActive) ? ' active' : '')
-  return <button title='段落' className={className}
+  return <><button title='段落' className={className}
                        disabled={props.disabled}
                        onMouseDown={(event: React.MouseEvent) => {
                          console.debug('SFParagraphToolbar onClick')
@@ -29,6 +28,20 @@ export function SFParagraphToolbar (props: { disabled: boolean }) {
                            paragraph
                          )
                        }}><i className="ri-paragraph"></i></button>
+    </>
+}
+
+export function SFParagraphActions (props: { node: SFParagraphNode }) {
+  const editor = useSlate() as ReactEditor
+  return <>
+    <SFIcon iconName={'ri-bold'} format={'bold'} node={props.node}/>
+    <SFIcon iconName={'ri-italic'} format={'italic'} node={props.node}/>
+    <SFIcon iconName={'ri-underline'} format={'underline'} node={props.node}/>
+    <SFIcon iconName={'ri-strikethrough'} format={'strike'} node={props.node}/>
+    <button title='清除格式' className={'icon-button'}
+            onMouseDown={useClearFormats(editor, props.node)}>
+      <i className="ri-format-clear"></i></button>
+  </>
 }
 
 export interface SFParagraphNode extends SFElement {
@@ -56,30 +69,7 @@ function isActive (props: any): boolean {
 }
 
 export function SFParagraphView (props: { attributes: any, children: any, node: SFParagraphNode }) {
-  const editor = useSlate() as ReactEditor
-  const [isCalloutVisible, { setTrue, setFalse }] = useBoolean(false)
-  return <div onMouseEnter={setTrue}
-              onMouseLeave={setFalse} className={'paragraph'}>
-    <Stack horizontal horizontalAlign="start" contentEditable={false} tokens={{ childrenGap: 8 }}
-           className={isCalloutVisible ? 'show' : 'hidden'}>
-      <Stack.Item>
-        <SFIcon iconName={'ri-bold'} format={'bold'} node={props.node}/>
-      </Stack.Item>
-      <Stack.Item>
-        <SFIcon iconName={'ri-italic'} format={'italic'} node={props.node}/>
-      </Stack.Item>
-      <Stack.Item>
-        <SFIcon iconName={'ri-underline'} format={'underline'} node={props.node}/>
-      </Stack.Item>
-      <Stack.Item>
-        <SFIcon iconName={'ri-strikethrough'} format={'strike'} node={props.node}/>
-      </Stack.Item>
-      <Stack.Item>
-        <button title='清除格式' className={'icon-button'}
-                onMouseDown={useClearFormats(editor, props.node)}>
-          <i className="ri-format-clear"></i></button>
-      </Stack.Item>
-    </Stack>
+  return <div className={'paragraph'}>
     <p data-name={ParagraphName} {...props.attributes}>{props.children}</p>
   </div>
 }

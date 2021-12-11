@@ -10,14 +10,14 @@ import { HistoryEditor, withHistory } from 'slate-history'
 import { Stack } from '@fluentui/react'
 import {
   header2Markdown,
-  HeaderName,
+  HeaderName, SFHeaderActions,
   SFHeaderNode,
   SFHeaderToolbar,
   SFHeaderView
 } from './nodes/header'
 import { NewTextNode, SFTextView } from './nodes/text'
 import {
-  NewParagraphNode, paragraph2Markdown, ParagraphName, ParagraphOnKeyDown,
+  NewParagraphNode, paragraph2Markdown, ParagraphName, ParagraphOnKeyDown, SFParagraphActions,
   SFParagraphNode,
   SFParagraphToolbar,
   SFParagraphView
@@ -76,53 +76,6 @@ function SFXEditor (props: { value: SFEditorModel, onChange: (value: SFEditorMod
                    }}>
 
                 <Stack className={'stele-editor'} tokens={{ childrenGap: 8 }}>
-                    <Stack.Item className={'toolbar'}>
-                        <Stack horizontal horizontalAlign={'space-between'}>
-                            <Stack.Item>
-                                <Stack horizontal tokens={{ childrenGap: 8 }}>
-                                    <Stack.Item>
-                                        <SFParagraphToolbar disabled={sourceMode}/>
-                                    </Stack.Item>
-                                    <Stack.Item>
-                                        <SFHeaderToolbar disabled={sourceMode} />
-                                    </Stack.Item>
-                                    <Stack.Item>
-                                        <SFCodeBlockToolbar disabled={sourceMode}/>
-                                    </Stack.Item>
-                                </Stack>
-                            </Stack.Item>
-                            <Stack.Item>
-                                <Stack horizontal tokens={{ childrenGap: 8 }}>
-                                    <Stack.Item>
-                                      <button title='撤销' className={'icon-button'}
-                                              onMouseDown={undoOperation} disabled={sourceMode}>
-                                        <i className="ri-arrow-go-back-line"></i></button>
-                                    </Stack.Item>
-                                    <Stack.Item>
-                                      <button title='重做' className={'icon-button'}
-                                              onMouseDown={redoOperation} disabled={sourceMode}>
-                                        <i className="ri-arrow-go-forward-line"></i></button>
-                                    </Stack.Item>
-                                    <Stack.Item>
-                                      <button title='移除块' className={'icon-button'}
-                                              onMouseDown={removeNodes} disabled={sourceMode}>
-                                        <i className="ri-close-line"></i>
-                                      </button>
-                                    </Stack.Item>
-                                    {/* <Stack.Item> */}
-                                    {/*  <button title='页面源码' className={'icon-button'} disabled={sourceMode} */}
-                                    {/*          onMouseDown={() => { */}
-                                    {/*            console.debug('showSource', props.value) */}
-                                    {/*            toggleSourceMode() */}
-                                    {/*            showSource(props.value, sourceMode) */}
-                                    {/*          }}> */}
-                                    {/*    <i className="ri-file-code-line"></i> */}
-                                    {/*  </button> */}
-                                    {/* </Stack.Item> */}
-                                </Stack>
-                            </Stack.Item>
-                        </Stack>
-                    </Stack.Item>
                     <Stack.Item grow={1} className={'body'}>
                         <Editable
                             decorate={decorate}
@@ -351,27 +304,43 @@ function decorateElement ([node, path]: NodeEntry): SlateRange[] {
 function Element ({ attributes, children, element }:{attributes: any, children: any, element: any}) {
   console.debug('renderElement', element, attributes, children)
   const [isActive, setIsActive] = useState<boolean>(false)
-  let view: JSX.Element
+  let view: JSX.Element = <span></span>
+  let actionsView: JSX.Element = <span></span>
   if (element.name === HeaderName) {
     view = <SFHeaderView attributes={attributes} node={element as SFHeaderNode}>
       {children}
     </SFHeaderView>
+    actionsView = <SFHeaderActions />
   } else if (element.name === CodeBlockName) {
     view = <SFCodeBlockView attributes={attributes} node={element}>{children}</SFCodeBlockView>
-  } else if (element.name === MarkdownName) {
-    view = <SFMarkdownView attributes={attributes} node={element}>{children}</SFMarkdownView>
   } else {
     view = <SFParagraphView attributes={attributes} node={element as SFParagraphNode}>{children}</SFParagraphView>
+    actionsView = <SFParagraphActions node={element as SFParagraphNode}/>
   }
-  const elementClass = 'element ' + (isActive ? 'element-active' : '')
+  const elementClass = 'element element-' + element.name + (isActive ? ' element-active' : '')
   const actionsClass = 'actions ' + (isActive ? '' : 'invisible')
   return <div className={elementClass}
     onMouseEnter={() => setIsActive(true)}
     onMouseLeave={() => setIsActive(false)}>
     <div className={actionsClass} contentEditable={false}>
-      <button title='添加' className={'actions-button'}>
-        <i className="ri-add-fill"></i>
-      </button>
+      <div className={'left'}>
+        <SFParagraphToolbar disabled={false} node={element as SFParagraphNode}/>
+        <SFHeaderToolbar disabled={false} />
+        <SFCodeBlockToolbar disabled={false}/>
+        { actionsView }
+      </div>
+      <div className={'right'}>
+        <button title='撤销' className={'icon-button'}
+                onMouseDown={undoOperation} disabled={false}>
+          <i className="ri-arrow-go-back-line"></i></button>
+        <button title='重做' className={'icon-button'}
+                onMouseDown={redoOperation} disabled={false}>
+          <i className="ri-arrow-go-forward-line"></i></button>
+        <button title='移除块' className={'icon-button'}
+                onMouseDown={removeNodes} disabled={false}>
+          <i className="ri-close-line"></i>
+        </button>
+      </div>
     </div>
     <div>{view}</div>
   </div>

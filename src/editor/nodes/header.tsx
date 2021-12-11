@@ -52,8 +52,7 @@ export function SFHeaderToolbar (props: {disabled: boolean}) {
   const headerNode: SFHeaderNode = NewHeaderNode(1, '')
   console.debug('SFHeaderToolbar', headerNode)
   const className = 'icon-button size-normal' + (isBlockActive(editor, isActive) ? ' active' : '')
-  return <Stack horizontal horizontalAlign="space-between">
-    <button title='标题' className={className}
+  return <button title='标题' className={className}
                    disabled={props.disabled}
                    onMouseDown={(event) => {
                      event.preventDefault()
@@ -62,11 +61,19 @@ export function SFHeaderToolbar (props: {disabled: boolean}) {
                        headerNode
                      )
                    }}><i className="ri-heading"></i></button>
-</Stack>
+}
+
+export function SFHeaderActions () {
+  return <Stack horizontal horizontalAlign="start" tokens={{ childrenGap: 8 }}
+                styles={{ root: { overflow: 'hidden', float: 'right' } }}>
+    <ToolboxIcon iconName={'Header1'} header={1} />
+    <ToolboxIcon iconName={'Header2'} header={2} />
+    <ToolboxIcon iconName={'Header3'} header={3} />
+    <ToolboxIcon iconName={'Header4'} header={4} />
+  </Stack>
 }
 
 export function SFHeaderView (props: {attributes: any, children: any, node: SFHeaderNode}) {
-  const [isCalloutVisible, { setTrue, setFalse }] = useBoolean(false)
   let view: JSX.Element
   switch (props.node.header) {
     case 1:
@@ -91,16 +98,7 @@ export function SFHeaderView (props: {attributes: any, children: any, node: SFHe
       throw new Error(`未知标题: ${props.node.header}`)
   }
 
-  return <div className={'header'} onMouseEnter={setTrue}
-                onMouseLeave={setFalse}>
-        {isCalloutVisible && (
-        <Stack horizontal horizontalAlign="start" tokens={{ childrenGap: 8 }}
-               styles={{ root: { overflow: 'hidden', float: 'right' } }}>
-            <ToolboxIcon iconName={'Header1'} header={1} />
-            <ToolboxIcon iconName={'Header2'} header={2} />
-            <ToolboxIcon iconName={'Header3'} header={3} />
-            <ToolboxIcon iconName={'Header4'} header={4} />
-        </Stack>)}
+  return <div className={'header'}>
         {view}
     </div>
 }

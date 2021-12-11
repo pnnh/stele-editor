@@ -4,40 +4,37 @@
 
   .element {
     .actions {
-      .actions-button {
-        border: none; background: none;color:#0078d4;
-        cursor: pointer;
-        i {
-          font-size: 16px;
-          vertical-align: middle;
-        }
-      }
-      .actions-button.active,.actions-button:hover {
-        background: #edebe966;
-      }
+      display: flex;
+      justify-content: space-between;
     }
     .actions.invisible {
       visibility: hidden;
     }
   }
   .element-active {
-    background-color: #E0F1FF;
+    background-color: rgba(224, 241, 255, 0.3);
     .actions {
-      background-color: #c7dbf8;
+      background-color: rgba(223, 235, 255, 0.2);
     }
-  }
-  .toolbar {
-    padding: 8px 16px 8px 16px;border-bottom: solid 1px #edebe9;
   }
   .icon-button {
     border: none; background: none;color:#0078d4;
-    padding: 8px; cursor: pointer;
+    padding: 4px; cursor: pointer;
     i {
       font-size: 16px;
+      vertical-align: middle;
     }
   }
   .icon-button.active,.icon-button:hover {
     background: #edebe966;
+  }
+  .element-code-block {
+    .code-block {
+      margin: 0 0 4px;
+    }
+  }
+  .toolbar {
+    padding: 8px 16px 8px 16px;border-bottom: solid 1px #edebe9;
   }
   .icon {
     background-color:rgb(237 235 233 / 40%)
