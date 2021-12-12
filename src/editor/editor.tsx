@@ -9,7 +9,6 @@ import {
 import { HistoryEditor, withHistory } from 'slate-history'
 import { Stack } from '@fluentui/react'
 import {
-  header2Markdown,
   HeaderName, SFHeaderActions,
   SFHeaderNode,
   SFHeaderToolbar,
@@ -17,13 +16,12 @@ import {
 } from './nodes/header'
 import { NewTextNode, SFTextView } from './nodes/text'
 import {
-  NewParagraphNode, paragraph2Markdown, ParagraphName, ParagraphOnKeyDown, SFParagraphActions,
+  NewParagraphNode, ParagraphName, ParagraphOnKeyDown, SFParagraphActions,
   SFParagraphNode,
   SFParagraphToolbar,
   SFParagraphView
 } from './nodes/paragraph'
 import {
-  codeBlock2Markdown,
   CodeBlockName, NewCodeNode,
   SFCodeBlockLeafView,
   SFCodeBlockNode,
@@ -39,14 +37,10 @@ import {
   parseText,
   SFEditorModel, SFText
 } from './nodes/node'
-import { useBoolean } from '@fluentui/react-hooks'
 import {
-  MarkdownName,
-  NewMarkdownNode,
-  SFMarkdownLeafView,
-  SFMarkdownView
+  SFMarkdownLeafView
 } from './nodes/markdown'
-import { getLocalStorage, setLocalStorage } from './helpers'
+import { selectNodeLast, setLocalStorage } from './helpers'
 
 const StorageKey = 'editor-value'
 // 这里是单例的，一个页面只能有一个Editor
@@ -54,7 +48,6 @@ let editorObject: ReactEditor & HistoryEditor
 
 function SFXEditor (props: { value: SFEditorModel, onChange: (value: SFEditorModel) => void }) {
   console.debug('SFXEditor create')
-  const [sourceMode, { toggle: toggleSourceMode }] = useBoolean(false)
   const renElement = useCallback(props => <Element {...props}/>, [])
   const renLeaf = useCallback(props => <Leaf {...props}/>, [])
   const editorNode = withHistory(withReact(createEditor() as ReactEditor))
@@ -66,11 +59,8 @@ function SFXEditor (props: { value: SFEditorModel, onChange: (value: SFEditorMod
                      const editorValue = {
                        children: parseDescendantArray(value)
                      }
-                     // todo 如果是sourceMode，需要先转换为文档格式
-                     if (!sourceMode) {
-                       console.log('onChange写入存储', editorValue)
-                       setLocalStorage(StorageKey, editorValue)
-                     }
+                     console.log('onChange写入存储', editorValue)
+                     setLocalStorage(StorageKey, editorValue)
                      props.onChange(editorValue)
                      // rootNode = {children: descendants};
                    }}>
@@ -95,49 +85,6 @@ function SFXEditor (props: { value: SFEditorModel, onChange: (value: SFEditorMod
   )
 }
 
-function showSource (editorValue: SFEditorModel, sourceMode: boolean) {
-  const range: SlateRange = {
-    anchor: {
-      path: [0], offset: 0
-    },
-    focus: {
-      path: [editorObject.children.length - 1], offset: 1
-    }
-  }
-  Transforms.removeNodes(editorObject, {
-    at: range
-  })
-  if (sourceMode) {
-    const editorValue = getLocalStorage(StorageKey)
-    console.debug('editorValue', editorValue)
-    for (let i = 0; i < editorValue.children.length; ++i) {
-      const child = editorValue.children[i]
-      Transforms.insertNodes(editorObject, child)
-    }
-  } else {
-    let markdownString = ''
-    // 将editorValue转换为Markdown
-    for (let i = 0; i < editorValue.children.length; ++i) {
-      const child = editorValue.children[i]
-      switch (child.name) {
-        case HeaderName:
-          markdownString += header2Markdown(child as SFHeaderNode)
-          break
-        case ParagraphName:
-          markdownString += paragraph2Markdown(child as SFParagraphNode)
-          break
-        case CodeBlockName:
-          markdownString += codeBlock2Markdown(child as SFCodeBlockNode)
-          break
-      }
-    }
-    console.debug('markdownString', markdownString)
-
-    const paragraph = NewMarkdownNode(markdownString)
-    Transforms.insertNodes(editorObject, paragraph)
-  }
-}
-
 function undoOperation () {
   editorObject.undo()
 }
@@ -146,7 +93,8 @@ function redoOperation () {
   editorObject.redo()
 }
 
-function removeNodes () {
+function removeNodes (node: SlateNode) {
+  selectNodeLast(editorObject, node)
   Transforms.removeNodes(editorObject)
 }
 
@@ -337,7 +285,7 @@ function Element ({ attributes, children, element }:{attributes: any, children: 
                 onMouseDown={redoOperation} disabled={false}>
           <i className="ri-arrow-go-forward-line"></i></button>
         <button title='移除块' className={'icon-button'}
-                onMouseDown={removeNodes} disabled={false}>
+                onMouseDown={() => removeNodes(element)} disabled={false}>
           <i className="ri-close-line"></i>
         </button>
       </div>

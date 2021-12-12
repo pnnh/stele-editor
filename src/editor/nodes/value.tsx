@@ -7,14 +7,14 @@ export interface EditorValue {
 }
 
 class editorValue implements EditorValue {
-    rootNode: {children: SlateDescendant[]} = { children: [] }
-    setValue (children: SlateDescendant[]) {
-      this.rootNode.children = children
-    }
+  rootNode: {children: SlateDescendant[]} = { children: [] }
+  setValue (children: SlateDescendant[]) {
+    this.rootNode.children = children
+  }
 
-    getValue (): SlateDescendant[] {
-      return this.rootNode.children
-    }
+  getValue (): SlateDescendant[] {
+    return this.rootNode.children
+  }
 }
 
 export function NewEditorValue (): EditorValue {

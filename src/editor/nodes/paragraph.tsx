@@ -10,6 +10,7 @@ import {
 } from 'slate'
 import { NewTextNode, TextName } from './text'
 import isHotkey from 'is-hotkey'
+import { selectNodeLast } from '../helpers'
 
 export const ParagraphName = 'paragraph'
 
@@ -23,12 +24,8 @@ export function SFParagraphToolbar (props: { disabled: boolean, node: SFParagrap
                        onMouseDown={(event: React.MouseEvent) => {
                          console.debug('SFParagraphToolbar onClick')
                          event.preventDefault()
-                         const nodePath = ReactEditor.findPath(editor, props.node)
-                         const [lastNode, lastPath] = SlateNode.last(props.node, [])
-                         const point = {
-                           path: nodePath.concat(lastPath), offset: SlateNode.string(lastNode).length
-                         }
-                         Transforms.select(editor, point)
+
+                         selectNodeLast(editor, props.node)
                          Transforms.insertNodes(
                            editor,
                            paragraph
