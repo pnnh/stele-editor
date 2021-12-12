@@ -1,7 +1,6 @@
 import React, { KeyboardEvent } from 'react'
 import { SFElement, SFText } from './node'
 import { ReactEditor, useSlate } from 'slate-react'
-import { Stack } from '@fluentui/react'
 import {
   Editor,
   Element as SlateElement,
@@ -18,11 +17,18 @@ export function SFParagraphToolbar (props: { disabled: boolean, node: SFParagrap
   const editor = useSlate() as ReactEditor
   const paragraph = NewParagraphNode('')
   const className = 'icon-button size-normal' + (isBlockActive(editor, isActive) ? ' active' : '')
+
   return <><button title='段落' className={className}
                        disabled={props.disabled}
                        onMouseDown={(event: React.MouseEvent) => {
                          console.debug('SFParagraphToolbar onClick')
                          event.preventDefault()
+                         const nodePath = ReactEditor.findPath(editor, props.node)
+                         const [lastNode, lastPath] = SlateNode.last(props.node, [])
+                         const point = {
+                           path: nodePath.concat(lastPath), offset: SlateNode.string(lastNode).length
+                         }
+                         Transforms.select(editor, point)
                          Transforms.insertNodes(
                            editor,
                            paragraph
