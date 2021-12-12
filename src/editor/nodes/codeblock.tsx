@@ -1,17 +1,27 @@
 import React from 'react'
-import { SFElement, SFText } from './node'
+import { SFElement } from './node'
 import { ReactEditor, useSlate } from 'slate-react'
-import { Editor, Element as SlateElement, Node as SlateNode, Path as SlatePath, Transforms } from 'slate'
+import {
+  Editor,
+  Element as SlateElement,
+  Node as SlateNode,
+  Path as SlatePath,
+  Text as SlateText,
+  Transforms
+} from 'slate'
 import { selectNodeLast } from '../helpers'
 
 export const CodeBlockName = 'code-block'
 export const CodeName = 'code'
 
-export interface SFCodeBlockNode extends SFElement {
-    language: string;
+export interface SFCodeBlockNode extends SlateElement {
+  name: string;
+  children: SFCode[];
+  language: string;
 }
 
-export interface SFCode extends SFText {
+export interface SFCode extends SlateText {
+  name: string
 }
 
 export function NewCodeNode (text: string): SFCode {

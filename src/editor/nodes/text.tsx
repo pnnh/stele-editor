@@ -4,11 +4,14 @@ import { SFText } from './node'
 export const TextName = 'text'
 
 export function NewTextNode (text: string): SFText {
-  return { name: TextName, text: text }
+  const node = { name: TextName, text: text }
+  return node
 }
 
-export function SFTextView (props: {attributes: any, children: any, node: any}) {
+export function SFTextView (props: {attributes: any, children: any, node: SFText}) {
   const style: CSSProperties = {}
+
+  console.debug('SFTextView', props.node)
 
   for (const key in props.node) {
     // if (!Object.prototype.hasOwnProperty.call(props, key)) {

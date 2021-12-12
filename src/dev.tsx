@@ -11,6 +11,7 @@ const initialValue = {
 }
 
 function DevApp () {
+  // initialValue = JSON.parse('{"children":[{"children":[{"name":"text","text":""}],"name":"paragraph"},{"children":[{"name":"code","text":"#aaaaa\\n\\n```shell\\nls /home\\n```\\nconsole.log(\\"dddd\\")22"}],"language":"markdown","name":"code-block"}]}')
   const [editorValue, setEditorValue] = useState<SFEditorModel>(initialValue)
   return <SFXEditor value={editorValue} onChange={(value) => {
     console.debug('onChange222')

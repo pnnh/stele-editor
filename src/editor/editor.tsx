@@ -1,27 +1,22 @@
 import React, { ClipboardEvent, useCallback, useMemo, useState } from 'react'
-import { Editable, withReact, Slate, ReactEditor } from 'slate-react'
-import {
-  Transforms,
-  createEditor,
-  Node as SlateNode,
-  Range as SlateRange, Text, NodeEntry
-} from 'slate'
+import { Editable, ReactEditor, Slate, withReact } from 'slate-react'
+import { createEditor, Node as SlateNode, NodeEntry, Range as SlateRange, Text, Transforms } from 'slate'
 import { HistoryEditor, withHistory } from 'slate-history'
-import {
-  HeaderName, SFHeaderActions,
-  SFHeaderNode,
-  SFHeaderToolbar,
-  SFHeaderView
-} from './nodes/header'
+import { HeaderName, SFHeaderActions, SFHeaderNode, SFHeaderToolbar, SFHeaderView } from './nodes/header'
 import { NewTextNode, SFTextView } from './nodes/text'
 import {
-  NewParagraphNode, ParagraphName, ParagraphOnKeyDown, SFParagraphActions,
+  NewParagraphNode,
+  ParagraphName,
+  ParagraphOnKeyDown,
+  SFParagraphActions,
   SFParagraphNode,
   SFParagraphToolbar,
   SFParagraphView
 } from './nodes/paragraph'
 import {
-  CodeBlockName, NewCodeNode,
+  CodeBlockName,
+  NewCodeNode,
+  SFCode,
   SFCodeBlockLeafView,
   SFCodeBlockNode,
   SFCodeBlockToolbar,
@@ -30,12 +25,7 @@ import {
 import Prism from 'prismjs'
 import './highlight'
 
-import {
-  parseDescendant,
-  parseDescendantArray, parseElement,
-  parseText,
-  SFEditorModel, SFText
-} from './nodes/node'
+import { parseDescendant, parseDescendantArray, parseElement, parseText, SFEditorModel, SFText } from './nodes/node'
 import { selectNodeLast, setLocalStorage } from './helpers'
 
 const StorageKey = 'editor-value'
@@ -134,10 +124,11 @@ function onKeyDown (event: React.KeyboardEvent<HTMLDivElement>) {
       event.preventDefault()
       console.debug('selectedLeaf3')
       Transforms.insertNodes(editorObject, NewCodeNode('\n'))
+    } else if (element.name === ParagraphName) {
+      event.preventDefault()
+      Transforms.insertNodes(editorObject, NewTextNode('\n'))
     }
-    return
-  }
-  if (element.name === ParagraphName) {
+  } else if (element.name === ParagraphName) {
     ParagraphOnKeyDown(editorObject, event)
   }
 }
@@ -179,9 +170,24 @@ function onEditorPaste (event: ClipboardEvent<HTMLDivElement>) {
     event.preventDefault()
     const text = clipText
     console.debug('onEditorPaste selectedLeaf3', text === leaf.text, text, '|', leaf.text, '|')
-    const codeNode: SFText = NewCodeNode(text)
+    const codeNode: SFCode = NewCodeNode(text)
     console.debug('onEditorPaste selectedLeaf4', codeNode)
     Transforms.insertNodes(editorObject, codeNode)
+  } else if (element.name === ParagraphName) {
+    event.preventDefault()
+
+    const textNode: SFText = NewTextNode(clipText)
+    console.debug('onEditorPaste ParagraphName222', textNode)
+    Transforms.insertNodes(editorObject, textNode)
+    // const textLines = clipText.split('\n')
+    // console.debug('onEditorPaste ParagraphName', textLines)
+    // for (let i = 0; i < textLines.length; i++) {
+    //   const textNode: SFText = NewTextNode(textLines[i], {
+    //     display: TextNodeDisplay.block
+    //   })
+    //   console.debug('onEditorPaste ParagraphName222', textNode)
+    //   Transforms.insertNodes(editorObject, textNode)
+    // }
   }
 }
 
@@ -293,7 +299,7 @@ function Element ({ attributes, children, element }:{attributes: any, children: 
 function Leaf ({ attributes, children, leaf }:{attributes: any, children: any, leaf: any}) {
   console.debug('renderLeaf', leaf, attributes, children)
   if (leaf.name === 'text') {
-    return <SFTextView attributes={attributes} node={leaf}>{children}</SFTextView>
+    return <SFTextView attributes={attributes} node={leaf as SFText}>{children}</SFTextView>
   } else if (leaf.name === 'code') {
     return <SFCodeBlockLeafView attributes={attributes} node={leaf}>{children}</SFCodeBlockLeafView>
   }

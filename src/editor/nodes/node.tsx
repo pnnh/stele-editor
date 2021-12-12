@@ -11,7 +11,7 @@ export interface SFElement extends SlateElement {
 }
 
 export interface SFText extends SlateText {
-    name: string;
+    name: string
 }
 
 export declare type SFDescendant = SFElement | SFText;

@@ -1,5 +1,5 @@
 import React, { KeyboardEvent } from 'react'
-import { SFElement, SFText } from './node'
+import { SFText } from './node'
 import { ReactEditor, useSlate } from 'slate-react'
 import {
   Editor,
@@ -47,7 +47,9 @@ export function SFParagraphActions (props: { node: SFParagraphNode }) {
   </>
 }
 
-export interface SFParagraphNode extends SFElement {
+export interface SFParagraphNode extends SlateElement {
+  name: string;
+  children: SFText[];
 }
 
 export function NewParagraphNode (text: string): SFParagraphNode {

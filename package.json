@@ -1,6 +1,6 @@
 {
   "name": "@pnnh/stele",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Loads themed styles.",
   "keywords": [
     "editor"
