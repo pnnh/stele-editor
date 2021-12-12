@@ -1,6 +1,6 @@
 {
   "name": "@pnnh/stele",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Loads themed styles.",
   "keywords": [
     "editor"
@@ -18,7 +18,6 @@
   },
   "resolutions": {},
   "dependencies": {
-    "@fluentui/react": "^8.47.1",
     "is-hotkey": "^0.2.0",
     "prismjs": "^1.23.0",
     "react": "^17.0.1",

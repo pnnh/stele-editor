@@ -2,6 +2,7 @@ import React from 'react'
 import { SFElement, SFText } from './node'
 import { ReactEditor, useSlate } from 'slate-react'
 import { Editor, Element as SlateElement, Node as SlateNode, Path as SlatePath, Transforms } from 'slate'
+import { selectNodeLast } from '../helpers'
 
 export const CodeBlockName = 'code-block'
 export const CodeName = 'code'
@@ -11,12 +12,6 @@ export interface SFCodeBlockNode extends SFElement {
 }
 
 export interface SFCode extends SFText {
-}
-
-export function codeBlock2Markdown (node: SFCodeBlockNode): string {
-  let mdStr = '```' + node.language + '\n'
-  mdStr = mdStr + (node.children[0] as SFText).text
-  return mdStr + '\n```\n\n'
 }
 
 export function NewCodeNode (text: string): SFCode {
@@ -70,15 +65,16 @@ export function SFCodeBlockLeafView (props: {attributes: any, children: any, nod
     </span>
 }
 
-export function SFCodeBlockToolbar (props: {disabled: boolean}) {
+export function SFCodeBlockToolbar (props: {node: SlateNode}) {
   const editor = useSlate() as ReactEditor
   const node = NewCodeBlockNode('js', '')
   console.debug('SFCodeBlockToolbar', node)
   const className = 'icon-button' + (isBlockActive(editor, isActive) ? ' active' : '')
   return <button title='段落' className={className}
-                 disabled={props.disabled}
                  onMouseDown={(event) => {
                    event.preventDefault()
+
+                   selectNodeLast(editor, props.node)
                    Transforms.insertNodes(
                      editor,
                      // [node, paragraphNode]    // 同时插入一个段落

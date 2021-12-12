@@ -57,15 +57,6 @@ export function NewParagraphNode (text: string): SFParagraphNode {
   }
 }
 
-export function paragraph2Markdown (node: SFParagraphNode): string {
-  let mdStr = ''
-  for (let i = 0; i < node.children.length; i++) {
-    const child = node.children[i]
-    mdStr += (child as SFText).text
-  }
-  return mdStr + '\n\n'
-}
-
 function isActive (props: any): boolean {
   const node = props as SFParagraphNode
   return node.name === 'paragraph'

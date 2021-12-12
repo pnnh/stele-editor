@@ -1,15 +1,12 @@
 import React from 'react'
-import { SFElement, SFText } from './node'
+import { SFElement } from './node'
 import { ReactEditor, useSlate } from 'slate-react'
-import {
-  Stack
-} from '@fluentui/react'
 import {
   Editor, Element as SlateElement, Node as SlateNode,
   Transforms
 } from 'slate'
 import { NewTextNode } from './text'
-import { useBoolean } from '@fluentui/react-hooks'
+import { selectNodeLast } from '../helpers'
 
 export interface SFHeaderNode extends SFElement {
     header: number;
@@ -22,15 +19,6 @@ export function NewHeaderNode (header: number, text: string): SFHeaderNode {
     children: [NewTextNode(text)],
     header: header
   }
-}
-
-export function header2Markdown (node: SFHeaderNode): string {
-  let mdStr = ''
-  for (let i = 0; i < node.header; i++) {
-    mdStr += '#'
-  }
-  mdStr = mdStr + ' ' + (node.children[0] as SFText).text
-  return mdStr + '\n\n'
 }
 
 export function isBlockActive (editor: ReactEditor, isActive: (node: any) => boolean): boolean {
@@ -47,15 +35,15 @@ function isActive (props: any): boolean {
   return node.name === HeaderName
 }
 
-export function SFHeaderToolbar (props: {disabled: boolean}) {
+export function SFHeaderToolbar (props: {node: SlateNode}) {
   const editor = useSlate() as ReactEditor
   const headerNode: SFHeaderNode = NewHeaderNode(1, '')
   console.debug('SFHeaderToolbar', headerNode)
   const className = 'icon-button size-normal' + (isBlockActive(editor, isActive) ? ' active' : '')
   return <button title='标题' className={className}
-                   disabled={props.disabled}
                    onMouseDown={(event) => {
                      event.preventDefault()
+                     selectNodeLast(editor, props.node)
                      Transforms.insertNodes(
                        editor,
                        headerNode
@@ -64,13 +52,12 @@ export function SFHeaderToolbar (props: {disabled: boolean}) {
 }
 
 export function SFHeaderActions () {
-  return <Stack horizontal horizontalAlign="start" tokens={{ childrenGap: 8 }}
-                styles={{ root: { overflow: 'hidden', float: 'right' } }}>
+  return <div style={{ overflow: 'hidden', float: 'right' }}>
     <ToolboxIcon iconName={'Header1'} header={1} />
     <ToolboxIcon iconName={'Header2'} header={2} />
     <ToolboxIcon iconName={'Header3'} header={3} />
     <ToolboxIcon iconName={'Header4'} header={4} />
-  </Stack>
+  </div>
 }
 
 export function SFHeaderView (props: {attributes: any, children: any, node: SFHeaderNode}) {

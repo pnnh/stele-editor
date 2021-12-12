@@ -2,7 +2,6 @@ import React from 'react'
 
 export * from './editor/editor'
 export * from './editor/nodes/node'
-export * from './a'
 
 export function App2 () {
   return <div>app2</div>

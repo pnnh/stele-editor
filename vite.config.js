@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import path from 'path'
 
 const config = defineConfig({
   plugins: [
@@ -13,6 +14,12 @@ const config = defineConfig({
     rollupOptions: {
       input: ['index.html']
     }
+  },
+  resolve: {
+    alias: [
+      { find: '@', replacement: path.resolve(__dirname, 'src') },
+      { find: '~', replacement: path.resolve(__dirname, 'node_modules') }
+    ]
   },
   publicDir: 'public'
 })

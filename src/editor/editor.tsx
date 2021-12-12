@@ -7,7 +7,6 @@ import {
   Range as SlateRange, Text, NodeEntry
 } from 'slate'
 import { HistoryEditor, withHistory } from 'slate-history'
-import { Stack } from '@fluentui/react'
 import {
   HeaderName, SFHeaderActions,
   SFHeaderNode,
@@ -37,9 +36,6 @@ import {
   parseText,
   SFEditorModel, SFText
 } from './nodes/node'
-import {
-  SFMarkdownLeafView
-} from './nodes/markdown'
 import { selectNodeLast, setLocalStorage } from './helpers'
 
 const StorageKey = 'editor-value'
@@ -65,8 +61,8 @@ function SFXEditor (props: { value: SFEditorModel, onChange: (value: SFEditorMod
                      // rootNode = {children: descendants};
                    }}>
 
-                <Stack className={'stele-editor'} tokens={{ childrenGap: 8 }}>
-                    <Stack.Item grow={1} className={'body'}>
+                <div className={'stele-editor'}>
+                    <div className={'body'}>
                         <Editable
                             decorate={decorate}
                             renderElement={renElement}
@@ -79,8 +75,8 @@ function SFXEditor (props: { value: SFEditorModel, onChange: (value: SFEditorMod
                             onPaste={onEditorPaste}
                             spellCheck={false}
                         />
-                    </Stack.Item>
-                </Stack>
+                    </div>
+                </div>
             </Slate>
   )
 }
@@ -273,8 +269,8 @@ function Element ({ attributes, children, element }:{attributes: any, children: 
     <div className={actionsClass} contentEditable={false}>
       <div className={'left'}>
         <SFParagraphToolbar disabled={false} node={element as SFParagraphNode}/>
-        <SFHeaderToolbar disabled={false} />
-        <SFCodeBlockToolbar disabled={false}/>
+        <SFHeaderToolbar node={element}/>
+        <SFCodeBlockToolbar node={element}/>
         { actionsView }
       </div>
       <div className={'right'}>
@@ -300,8 +296,6 @@ function Leaf ({ attributes, children, leaf }:{attributes: any, children: any, l
     return <SFTextView attributes={attributes} node={leaf}>{children}</SFTextView>
   } else if (leaf.name === 'code') {
     return <SFCodeBlockLeafView attributes={attributes} node={leaf}>{children}</SFCodeBlockLeafView>
-  } else if (leaf.name === 'mark') {
-    return <SFMarkdownLeafView attributes={attributes} node={leaf}>{children}</SFMarkdownLeafView>
   }
   return <span {...attributes}>{children}</span>
 }
