@@ -1,6 +1,6 @@
 .stele-editor {
   border: 1px solid #edebe9;margin-bottom: 16px;
-  min-height: 400px;max-height:600px;
+  min-height: 400px;
 
   .element {
     .actions {
@@ -40,7 +40,7 @@
     background-color:rgb(237 235 233 / 40%)
   }
   .body {
-    margin-bottom: 16px; overflow-y: auto; overflow-x: hidden;margin-top:0;padding:16px;
+    margin-bottom: 16px;overflow-x: hidden;margin-top:0;padding:16px;
   }
   .code-block {
     background: #f6f6f6;

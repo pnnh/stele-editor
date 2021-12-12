@@ -11,7 +11,10 @@ export default [{
     file: 'lib/index.js',
     format: 'umd',
     name: 'Stele',
-    sourcemap: true
+    sourcemap: true,
+    globals: {
+      react: 'React'
+    }
   },
   external: ['react'],
   plugins: [

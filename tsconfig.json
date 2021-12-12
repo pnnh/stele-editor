@@ -18,7 +18,7 @@
 //    "noEmit": false,
     "declaration": true,
     //"declarationDir": "types",
-    //"emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "plugins": [],
     "paths": {
       "@/*": ["src/*"]
