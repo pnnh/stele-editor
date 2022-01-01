@@ -10,7 +10,7 @@ export function NewTextNode (text: string): SFText {
 
 export function SFTextView (props: {attributes: any, children: any, node: SFText}) {
   const style: CSSProperties = {}
-
+  let className: string = ''
   console.debug('SFTextView', props.node)
 
   for (const key in props.node) {
@@ -30,7 +30,12 @@ export function SFTextView (props: {attributes: any, children: any, node: SFText
       case 'strike':
         style.textDecoration = 'line-through'
         break
+      case 'code':
+        className = 'inline-code'
+        break
     }
   }
-  return <span data-name={TextName} {...props.attributes} style={style}>{props.children}</span>
+  return <span data-name={TextName} {...props.attributes}
+                className={className}
+               style={style}>{props.children}</span>
 }

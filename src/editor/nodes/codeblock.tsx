@@ -90,7 +90,7 @@ export function SFCodeBlockToolbar (props: {node: SlateNode}) {
                      // [node, paragraphNode]    // 同时插入一个段落
                      [node]
                    )
-                 }}><i className={'ri-code-s-slash-line'}></i></button>
+                 }}><i className={'ri-terminal-box-line'}></i></button>
 }
 
 function SelectLanguage (props: {element: SFCodeBlockNode}) {

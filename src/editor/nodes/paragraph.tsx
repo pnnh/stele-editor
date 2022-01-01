@@ -41,6 +41,7 @@ export function SFParagraphActions (props: { node: SFParagraphNode }) {
     <SFIcon iconName={'ri-italic'} format={'italic'} node={props.node}/>
     <SFIcon iconName={'ri-underline'} format={'underline'} node={props.node}/>
     <SFIcon iconName={'ri-strikethrough'} format={'strike'} node={props.node}/>
+    <SFIcon iconName={'ri-code-line'} format={'code'} node={props.node}/>
     <button title='清除格式' className={'icon-button'}
             onMouseDown={useClearFormats(editor, props.node)}>
       <i className="ri-format-clear"></i></button>
@@ -81,6 +82,9 @@ export function ParagraphOnKeyDown (editor: ReactEditor, event: KeyboardEvent<HT
   } else if (isHotkey('mod+u', event)) {
     console.debug('下划线')
     Editor.addMark(editor, 'underline', true)
+  } else if (isHotkey('mod+c', event)) {
+    console.debug('行内代码')
+    Editor.addMark(editor, 'code', true)
   }
 }
 
