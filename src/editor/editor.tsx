@@ -27,6 +27,7 @@ import './highlight'
 
 import { parseDescendant, parseDescendantArray, parseElement, parseText, SFEditorModel, SFText } from './nodes/node'
 import { selectNodeLast, setLocalStorage } from './helpers'
+import { QuoteBlockName, SFQuoteBlockToolbar, SFQuoteBlockView } from '@/editor/nodes/quote-block'
 
 const StorageKey = 'editor-value'
 // 这里是单例的，一个页面只能有一个Editor
@@ -127,6 +128,9 @@ function onKeyDown (event: React.KeyboardEvent<HTMLDivElement>) {
     } else if (element.name === ParagraphName) {
       event.preventDefault()
       Transforms.insertNodes(editorObject, NewTextNode('\n'))
+    } else if (element.name === QuoteBlockName) {
+      event.preventDefault()
+      Transforms.insertNodes(editorObject, NewTextNode('\n'))
     }
   } else if (element.name === ParagraphName) {
     ParagraphOnKeyDown(editorObject, event)
@@ -175,19 +179,14 @@ function onEditorPaste (event: ClipboardEvent<HTMLDivElement>) {
     Transforms.insertNodes(editorObject, codeNode)
   } else if (element.name === ParagraphName) {
     event.preventDefault()
-
     const textNode: SFText = NewTextNode(clipText)
     console.debug('onEditorPaste ParagraphName222', textNode)
     Transforms.insertNodes(editorObject, textNode)
-    // const textLines = clipText.split('\n')
-    // console.debug('onEditorPaste ParagraphName', textLines)
-    // for (let i = 0; i < textLines.length; i++) {
-    //   const textNode: SFText = NewTextNode(textLines[i], {
-    //     display: TextNodeDisplay.block
-    //   })
-    //   console.debug('onEditorPaste ParagraphName222', textNode)
-    //   Transforms.insertNodes(editorObject, textNode)
-    // }
+  } else if (element.name === QuoteBlockName) {
+    event.preventDefault()
+    const textNode: SFText = NewTextNode(clipText)
+    console.debug('onEditorPaste QuoteBlockName', textNode)
+    Transforms.insertNodes(editorObject, textNode)
   }
 }
 
@@ -263,6 +262,8 @@ function Element ({ attributes, children, element }:{attributes: any, children: 
     actionsView = <SFHeaderActions />
   } else if (element.name === CodeBlockName) {
     view = <SFCodeBlockView attributes={attributes} node={element}>{children}</SFCodeBlockView>
+  } else if (element.name === QuoteBlockName) {
+    view = <SFQuoteBlockView attributes={attributes} node={element}>{children}</SFQuoteBlockView>
   } else {
     view = <SFParagraphView attributes={attributes} node={element as SFParagraphNode}>{children}</SFParagraphView>
     actionsView = <SFParagraphActions node={element as SFParagraphNode}/>
@@ -277,6 +278,7 @@ function Element ({ attributes, children, element }:{attributes: any, children: 
         <SFParagraphToolbar disabled={false} node={element as SFParagraphNode}/>
         <SFHeaderToolbar node={element}/>
         <SFCodeBlockToolbar node={element}/>
+        <SFQuoteBlockToolbar node={element} />
         { actionsView }
       </div>
       <div className={'right'}>
