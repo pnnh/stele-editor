@@ -6,6 +6,13 @@
     .actions {
       display: flex;
       justify-content: space-between;
+      .left {
+        display: flex;
+        .extra {
+          display: inline-block;
+          margin-left: 8px;
+        }
+      }
     }
     .actions.invisible {
       visibility: hidden;

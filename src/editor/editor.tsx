@@ -279,7 +279,9 @@ function Element ({ attributes, children, element }:{attributes: any, children: 
         <SFHeaderToolbar node={element}/>
         <SFCodeBlockToolbar node={element}/>
         <SFQuoteBlockToolbar node={element} />
-        { actionsView }
+        <div className={'extra'}>
+          { actionsView }
+        </div>
       </div>
       <div className={'right'}>
         <button title='撤销' className={'icon-button'}
