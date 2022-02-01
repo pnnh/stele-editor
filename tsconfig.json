@@ -20,9 +20,6 @@
     //"declarationDir": "types",
     "emitDeclarationOnly": false,
     "plugins": [],
-    "paths": {
-      "@/*": ["src/*"]
-    }
   },
   "include": ["src/**/*"],
   "exclude": ["dist"]

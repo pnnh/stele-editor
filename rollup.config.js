@@ -9,25 +9,6 @@ export default [{
   input: 'dist/index.js',
   output: {
     file: 'lib/index.js',
-    format: 'umd',
-    name: 'Stele',
-    sourcemap: true,
-    globals: {
-      react: 'React'
-    }
-  },
-  external: ['react'],
-  plugins: [
-    commonjs(),
-    nodeResolve(),
-    visualizer({
-      filename: 'dist/status.html'
-    })
-  ]
-}, {
-  input: 'dist/index.js',
-  output: {
-    file: 'lib/index.es.js',
     format: 'esm',
     sourcemap: true
   },
@@ -45,7 +26,6 @@ export default [{
   plugins: [dts()]
 }, {
   input: 'src/index.scss',
-  // output: { file: 'lib/index.css' },
   plugins: [scss({ output: 'lib/index.css' })]
 }
 ]

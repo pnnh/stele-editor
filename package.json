@@ -1,6 +1,6 @@
 {
   "name": "@pnnh/stele",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "Loads themed styles.",
   "keywords": [
     "editor"
@@ -10,7 +10,6 @@
     "url": "https://github.com/pnnh/stele-editor"
   },
   "main": "lib/index.js",
-  "module": "lib/index.es.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "dev": "vite",

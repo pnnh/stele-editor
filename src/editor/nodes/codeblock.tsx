@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { SFElement } from './node'
 import { ReactEditor, useSlate } from 'slate-react'
 import {
@@ -37,12 +37,12 @@ export function NewCodeBlockNode (language: string, text: string): SFCodeBlockNo
   return block
 }
 
-export function SFCodeBlockView (props: {attributes: any, children: any, node: SFCodeBlockNode}) {
+export function SFCodeBlockView (props: { attributes: any, children: any, node: SFCodeBlockNode }) {
   console.debug('SFCodeBlockView', props)
   return <pre data-name={CodeBlockName} className={'code-block language-' + props.node.language}
               {...props.attributes}>
             <SelectLanguage element={props.node}/>
-            {props.children}
+    {props.children}
         </pre>
 }
 
@@ -60,7 +60,7 @@ function isActive (props: any): boolean {
   return node.name === CodeBlockName
 }
 
-export function SFCodeBlockLeafView (props: {attributes: any, children: any, node: any}) {
+export function SFCodeBlockLeafView (props: { attributes: any, children: any, node: any }) {
   console.debug('SFCodeBlockLeafView=========', props.node)
   let className = 'token '
   for (const k in props.node) {
@@ -69,13 +69,13 @@ export function SFCodeBlockLeafView (props: {attributes: any, children: any, nod
   }
   className = className.trim()
   return <span data-name={CodeName}
-                 {...props.attributes}
+               {...props.attributes}
                className={className}>
       {props.children}
     </span>
 }
 
-export function SFCodeBlockToolbar (props: {node: SlateNode}) {
+export function SFCodeBlockToolbar (props: { node: SlateNode }) {
   const editor = useSlate() as ReactEditor
   const node = NewCodeBlockNode('js', '')
   console.debug('SFCodeBlockToolbar', node)
@@ -93,44 +93,48 @@ export function SFCodeBlockToolbar (props: {node: SlateNode}) {
                  }}><i className={'ri-terminal-box-line'}></i></button>
 }
 
-function SelectLanguage (props: {element: SFCodeBlockNode}) {
+function SelectLanguage (props: { element: SFCodeBlockNode }) {
   const editor = useSlate() as ReactEditor
-  return <select name="select" defaultValue={props.element.language} className={'select-language'}
-                   onChange={(event) => {
-                     console.debug('Select Language', editor, event)
-                     if (event.target.value) {
-                       const selection = editor.selection
-                       if (!selection) {
-                         return
-                       }
-                       const codeblockNode = SlateNode.parent(editor, selection.focus.path)
-                       const parentPath = SlatePath.parent(selection.focus.path)
-                       console.debug('Select Language2', codeblockNode, parentPath)
-                       const newCodeblockNode: SFCodeBlockNode = {
-                         name: CodeBlockName,
-                         children: props.element.children,
-                         language: event.target.value
-                       }
-                       Transforms.setNodes(editor, newCodeblockNode, {
-                         at: parentPath
-                       })
+  const [language, setLanguage] = useState<string>(props.element.language)
+  return <select name="select" value={language} className={'select-language'}
+                 onChange={(event) => {
+                   console.debug('Select Language', editor, event)
+                   if (event.target.value) {
+                     const selection = editor.selection
+                     if (!selection) {
+                       return
                      }
-                   }}>
-        <option value="html">HTML</option>
-        <option value="js" >JavaScript</option>
-        <option value="css">CSS</option>
-        <option value="java">Java</option>
-        <option value="bash">Bash</option>
-        <option value="go">Go</option>
-        <option value="c">C</option>
-        <option value="cpp">C++</option>
-        <option value="csharp">C#</option>
-        <option value="markdown">Markdown</option>
-        <option value="kotlin">Kotlin</option>
-        <option value="json">JSON</option>
-        <option value="rust">Rust</option>
-        <option value="python">Python</option>
-        <option value="php">PHP</option>
-        <option value="sql">SQL</option>
-    </select>
+                     const parentPath = SlatePath.parent(selection.focus.path)
+                     console.debug('Select Language2', parentPath)
+
+                     selectNodeLast(editor, props.element)
+                     const newCodeblockNode: SFCodeBlockNode = {
+                       name: CodeBlockName,
+                       children: props.element.children,
+                       language: event.target.value
+                     }
+                     Transforms.setNodes(editor, newCodeblockNode)
+                     setLanguage(event.target.value)
+                   }
+                 }}>
+    <option value="bash">Bash</option>
+    <option value="c">C</option>
+    <option value="cpp">C++</option>
+    <option value="csharp">C#</option>
+    <option value="css">CSS</option>
+    <option value="dart">Dart</option>
+    <option value="go">Go</option>
+    <option value="html">HTML</option>
+    <option value="js">JavaScript</option>
+    <option value="json">JSON</option>
+    <option value="java">Java</option>
+    <option value="kotlin">Kotlin</option>
+    <option value="lisp">Lisp</option>
+    <option value="markdown">Markdown</option>
+    <option value="python">Python</option>
+    <option value="php">PHP</option>
+    <option value="rust">Rust</option>
+    <option value="sql">SQL</option>
+    <option value="swift">Swift</option>
+  </select>
 }

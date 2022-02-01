@@ -27,7 +27,7 @@ import './highlight'
 
 import { parseDescendant, parseDescendantArray, parseElement, parseText, SFEditorModel, SFText } from './nodes/node'
 import { selectNodeLast, setLocalStorage } from './helpers'
-import { QuoteBlockName, SFQuoteBlockToolbar, SFQuoteBlockView } from '@/editor/nodes/quote-block'
+import { QuoteBlockName, SFQuoteBlockToolbar, SFQuoteBlockView } from './nodes/quote-block'
 
 const StorageKey = 'editor-value'
 // 这里是单例的，一个页面只能有一个Editor
