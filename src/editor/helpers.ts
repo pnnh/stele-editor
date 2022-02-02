@@ -1,5 +1,5 @@
 import { ReactEditor } from 'slate-react'
-import { Node as SlateNode, Transforms } from 'slate'
+import { Editor as SlateEditor, Node as SlateNode, Transforms } from 'slate'
 
 export function setLocalStorage (key: string, value: any) {
   const stringValue = JSON.stringify(value)

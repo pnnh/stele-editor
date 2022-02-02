@@ -1,6 +1,15 @@
 import React, { ClipboardEvent, useCallback, useMemo, useState } from 'react'
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react'
-import { createEditor, Node as SlateNode, NodeEntry, Range as SlateRange, Text, Transforms } from 'slate'
+import {
+  createEditor,
+  Editor as SlateEditor,
+  Node as SlateNode,
+  Path as SlatePath,
+  NodeEntry,
+  Range as SlateRange,
+  Text,
+  Transforms
+} from 'slate'
 import { HistoryEditor, withHistory } from 'slate-history'
 import { HeaderName, SFHeaderActions, SFHeaderNode, SFHeaderToolbar, SFHeaderView } from './nodes/header'
 import { NewTextNode, SFTextView } from './nodes/text'
@@ -72,6 +81,31 @@ function SFXEditor (props: { value: SFEditorModel, onChange: (value: SFEditorMod
   )
 }
 
+function upOperation (node: SlateNode) {
+  const nodePath = ReactEditor.findPath(editorObject, node)
+  const prevNodeEntry = SlateEditor.previous(editorObject, { at: nodePath })
+  console.log('prevNodeEntry', nodePath, prevNodeEntry)
+  if (!prevNodeEntry) {
+    return undefined
+  }
+  downOperation(prevNodeEntry[0])
+}
+
+function downOperation (node: SlateNode) {
+  const nodePath = ReactEditor.findPath(editorObject, node)
+  const nextNodeEntry = SlateEditor.next(editorObject, { at: nodePath })
+  console.log('nextNodeEntry', nodePath, nextNodeEntry)
+  if (!nextNodeEntry) {
+    return
+  }
+  const nextPath = SlatePath.next(nextNodeEntry[1])
+  console.log('nextPath', nextPath)
+  Transforms.insertNodes(editorObject, Object.assign({}, node), {
+    at: nextPath
+  })
+  Transforms.removeNodes(editorObject, { at: nodePath })
+}
+
 function undoOperation () {
   editorObject.undo()
 }
@@ -86,13 +120,6 @@ function removeNodes (node: SlateNode) {
 }
 
 function onKeyDown (event: React.KeyboardEvent<HTMLDivElement>) {
-  // for (const hotkey in HOTKEYS) {
-  //     if (isHotkey(hotkey, event as any)) {
-  //         event.preventDefault()
-  //         // const mark = HOTKEYS[hotkey]
-  //         // toggleMark(editor, mark)
-  //     }
-  // }
   console.debug('selection', editorObject.selection)
   const selection = editorObject.selection
   if (!selection) {
@@ -284,6 +311,12 @@ function Element ({ attributes, children, element }:{attributes: any, children: 
         </div>
       </div>
       <div className={'right'}>
+        <button title='上移' className={'icon-button'}
+                onMouseDown={() => upOperation(element)} disabled={false}>
+          <i className="ri-arrow-up-line"></i></button>
+        <button title='下移' className={'icon-button'}
+                onMouseDown={() => downOperation(element)} disabled={false}>
+          <i className="ri-arrow-down-line"></i></button>
         <button title='撤销' className={'icon-button'}
                 onMouseDown={undoOperation} disabled={false}>
           <i className="ri-arrow-go-back-line"></i></button>
