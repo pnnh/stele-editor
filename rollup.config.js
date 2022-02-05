@@ -1,9 +1,9 @@
 import commonjs from '@rollup/plugin-commonjs'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-// import typescript from '@rollup/plugin-typescript'
 import scss from 'rollup-plugin-scss'
 import dts from 'rollup-plugin-dts'
 import { visualizer } from 'rollup-plugin-visualizer'
+import strip from '@rollup/plugin-strip'
 
 export default [{
   input: 'dist/index.js',
@@ -16,6 +16,12 @@ export default [{
   plugins: [
     commonjs(),
     nodeResolve(),
+    strip({
+      include: ['**/*.(js|mjs|ts|tsx)'],
+      debugger: true,
+      functions: ['console.log', 'console.debug'],
+      sourceMap: true
+    }),
     visualizer({
       filename: 'dist/status.es.html'
     })
@@ -23,7 +29,9 @@ export default [{
 }, {
   input: 'dist/index.d.ts',
   output: [{ file: 'lib/index.d.ts' }],
-  plugins: [dts()]
+  plugins: [
+    dts()
+  ]
 }, {
   input: 'src/index.scss',
   plugins: [scss({ output: 'lib/index.css' })]
